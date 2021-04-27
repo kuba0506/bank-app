@@ -1,0 +1,16 @@
+<!-- <div class="btn-group" ngbDropdown role="group">
+  <button class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>
+    {{ label }}
+  </button>
+  <div class="dropdown-menu" ngbDropdownMenu>
+    <button ngbDropdownItem (click)="onSelect(option)" *ngFor="let option of options; index as i;">{{option}}</button>
+  </div>
+</div> -->
+<div ngbDropdown class="d-inline-block">
+  <button class="btn btn-primary" id="dropdownBasic1" ngbDropdownToggle>
+    {{ label }}
+  </button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+    <button ngbDropdownItem (click)="onSelect(option)" *ngFor="let option of options; index as i;">{{option}}</button>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<h1 class="cover-heading">Display data transactions.</h1>
+<p class="lead">
+  Please select below country and language you preffered. Then click Connect
+  button.
+</p>
+
+<div class="container mt-4 mx-auto">
+  <div class="row">
+    <div class="col mb-4">
+      <app-dropdown
+        [label]="'Select country'"
+        [options]="[
+          'AT',
+          'BE',
+          'DE',
+          'DK',
+          'ES',
+          'FI',
+          'GB',
+          'IT',
+          'NL',
+          'NO',
+          'PT',
+          'SE'
+        ]"
+      ></app-dropdown>
+    </div>
+    <div class="col mb-4">
+      <app-dropdown
+        [label]="'Select language'"
+        [options]="[
+          'da_DK',
+          'de_DE',
+          'en_US',
+          'es_ES',
+          'fi_FI',
+          'fr_FR',
+          'it_IT',
+          'nl_NL',
+          'no_NO',
+          'pt_PT',
+          'sv_SE'
+        ]"
+      ></app-dropdown>
+    </div>
+  </div>
+</div>
+
+<p class="lead">
+  <a href="#" class="btn btn-lg btn-secondary">Connect</a>
+</p>
