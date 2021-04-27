@@ -8,6 +8,7 @@ import { FooterComponent } from './shared/footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownComponent } from './shared/dropdown/dropdown.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { DropdownComponent } from './shared/dropdown/dropdown.component';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
-    DropdownComponent
+    DropdownComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
