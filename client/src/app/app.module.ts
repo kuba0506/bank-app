@@ -9,6 +9,8 @@ import { HomeComponent } from './home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DropdownComponent } from './shared/dropdown/dropdown.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { AuthButtonComponent } from './auth-button/auth-button.component';
+import { CallbackComponent } from './callback/callback.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
     FooterComponent,
     HomeComponent,
     DropdownComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AuthButtonComponent,
+    CallbackComponent
   ],
   imports: [
     BrowserModule,
