@@ -13,20 +13,27 @@ app.use(express.static(path.join(__dirname, "client/build")));
 app.use(bodyParser.json());
 
 // Needed to make client-side routing work in production.
-app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
-});
+// todo fix
+// app.get("/*", function (req, res) {
+//     res.sendFile(path.join(__dirname, "client/dist/client", "index.html"));
+// });
 
 const base = "https://api.tink.se/api/v1";
+const transactionURl = 'https://api.tink.com/data/v2/transactions';
+
 
 // This is the server API, where the client can post a received OAuth code.
-app.post("/callback", function (req, res) {
-    getAccessToken(req.body.code)
+app.get("/callback", function (req, res) {
+  console.log("!!!code: ", req.query);
+  // console.log("!!!code: ", req.body);
+    getAccessToken(req.query.code)
+    // getAccessToken(req.body.code)
         .then((response) => getData(response.access_token))
         .then((response) => {
             res.json({
                 response,
             });
+            // res.redirect("/to");
         })
         .catch((err) => {
             console.log(err);
@@ -43,22 +50,40 @@ async function handleResponse(response) {
 }
 
 async function getData(accessToken) {
-    const [categoryData, userData, accountData, investmentData, transactionData] = await Promise.all([
-        getCategoryData(accessToken),
-        getUserData(accessToken),
-        getAccountData(accessToken),
-        getInvestmentData(accessToken),
+    const [transactionData] = await Promise.all([
         getTransactionData(accessToken),
     ]);
 
     return {
-        categoryData,
-        userData,
-        accountData,
-        investmentData,
         transactionData,
     };
+    // const [accountData, transactionData] = await Promise.all([
+    //     getAccountData(accessToken),
+    //     getTransactionData(accessToken),
+    // ]);
+
+    // return {
+    //     accountData,
+    //     transactionData,
+    // };
 }
+// async function getData(accessToken) {
+//     const [categoryData, userData, accountData, investmentData, transactionData] = await Promise.all([
+//         getCategoryData(accessToken),
+//         getUserData(accessToken),
+//         getAccountData(accessToken),
+//         getInvestmentData(accessToken),
+//         getTransactionData(accessToken),
+//     ]);
+
+//     return {
+//         categoryData,
+//         userData,
+//         accountData,
+//         investmentData,
+//         transactionData,
+//     };
+// }
 
 async function getAccessToken(code) {
     const body = {
@@ -113,6 +138,19 @@ async function getInvestmentData(token) {
     return handleResponse(response);
 }
 
+async function getTransactionData2(token) {
+    const response = await fetch(transactionURl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({ limit: 5 }),
+    });
+
+    return handleResponse(response);
+}
+// https://docs.tink.com/api#search-query-transactions
 async function getTransactionData(token) {
     const response = await fetch(base + "/search", {
         method: "POST",
@@ -147,5 +185,5 @@ if (!TINK_CLIENT_SECRET) {
 // Start the server.
 const port = 8080;
 app.listen(port, function () {
-    console.log("Tink example app listening on port " + port);
+    console.log("Bank app listening on port " + port);
 });
