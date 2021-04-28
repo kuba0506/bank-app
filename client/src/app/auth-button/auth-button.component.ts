@@ -44,25 +44,17 @@ export class AuthButtonComponent implements OnInit, OnChanges {
   }
 
   authLinkGenerator(): string {
-    // todo
-    return `http://localhost:3000/?market=${this.market}&locale=${this.locale}`;
+    const baseURL = 'https://link.tink.com/1.0/authorize/';
+    // tslint:disable-next-line:variable-name
+    const client_id = environment.TINK_APP_CLIENT_ID;
+    // tslint:disable-next-line:variable-name
+    const redirect_uri = 'http://localhost:3000/callback';
+    const scope = 'accounts:read,transactions:read,investments:read,user:read';
+    const market = this.market;
+    const locale = this.locale;
+    const test = true;
+
+    return `${baseURL}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&market=${market}&locale=${locale}&test=${test}`;
   }
 }
 
-// export const AuthorizationLink = ({ locale, market, scope, ssn }) => {
-//   const ssnData = ssn ? '&input_username=' + ssn : '';
-//   const link =
-//     'https://link.tink.com/1.0/authorize/?' +
-//     'client_id=' +
-//     process.env.REACT_APP_CLIENT_ID +
-//     '&redirect_uri=http://localhost:3000/callback' +
-//     '&scope=' +
-//     scope +
-//     ssnData +
-//     '&market=' +
-//     market +
-//     '&locale=' +
-//     locale;
-
-//   return <Button href={link}>Connect Bank</Button>;
-// };
