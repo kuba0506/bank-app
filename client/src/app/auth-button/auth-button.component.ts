@@ -5,7 +5,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { env } from '../../../../env';
 
 @Component({
   selector: 'app-auth-button',
@@ -46,7 +46,7 @@ export class AuthButtonComponent implements OnInit, OnChanges {
   authLinkGenerator(): string {
     const baseURL = 'https://link.tink.com/1.0/authorize/';
     // tslint:disable-next-line:variable-name
-    const client_id = environment.TINK_APP_CLIENT_ID;
+    const client_id = env.TINK_APP_CLIENT_ID;
     // tslint:disable-next-line:variable-name
     const redirect_uri = 'http://localhost:3000/callback';
     const scope = 'accounts:read,transactions:read,investments:read,user:read';
@@ -57,4 +57,3 @@ export class AuthButtonComponent implements OnInit, OnChanges {
     return `${baseURL}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&market=${market}&locale=${locale}&test=${test}`;
   }
 }
-
