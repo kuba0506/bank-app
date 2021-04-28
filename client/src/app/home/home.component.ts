@@ -13,7 +13,6 @@ export class HomeComponent implements OnInit {
   constructor() {}
 
   onSelect(option: IOption): void {
-    console.log('home', option, option.name);
     this[option.name] = option.value;
   }
 
