@@ -1,5 +1,15 @@
 # Client
 
+# create env. file in ./client
+1.Fill in file with following secrets:
+TINK_APP_CLIENT_ID="<your_client_id>"
+TINK_CLIENT_SECRET="<your_client-secret>"
+
+2 Run command  - npm start
+
+
+
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.10.
 
 ## Development server

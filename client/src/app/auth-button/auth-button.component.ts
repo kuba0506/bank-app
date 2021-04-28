@@ -5,6 +5,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-auth-button',
@@ -34,18 +35,10 @@ export class AuthButtonComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     for (const propName in changes) {
+      // typescript force checking if prop exists in object not in its prototype chain
       if (changes.hasOwnProperty(propName)) {
-        const chng = changes[propName];
-        const cur = chng.currentValue;
-        const prev = chng.previousValue;
+        const cur = changes[propName].currentValue;
         this[propName] = cur;
-        console.log('onChanges: ', {
-          propName,
-          cur,
-          prev,
-          market: this.market,
-          locale: this.locale,
-        });
       }
     }
   }
