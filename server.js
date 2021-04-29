@@ -8,7 +8,6 @@ const TINK_APP_CLIENT_ID = process.env.TINK_APP_CLIENT_ID;
 const TINK_CLIENT_SECRET = process.env.TINK_CLIENT_SECRET;
 let token;
 
-// todo
 app.use(express.static(path.join(__dirname, "client/build")));
 app.use(bodyParser.json());
 
@@ -97,18 +96,7 @@ async function getTransactionData(token) {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ limit: 15, endDate: 1609459199000, startDate: 1577836800000, order: "DESC" }),
-    });
-
-    return handleResponse(response);
-}
-
-async function getAccountData(token) {
-    const response = await fetch(base + "/accounts/list", {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-        },
+        body: JSON.stringify({ limit: 15, endDate: 1609459199000, startDate: 1577836800000, order: "ASC" }),
     });
 
     return handleResponse(response);

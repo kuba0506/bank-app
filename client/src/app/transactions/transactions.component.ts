@@ -12,7 +12,7 @@ export class TransactionsComponent implements OnInit {
   mostOccurenceMerchant: any;
   maxSum: any;
   topThree: any;
-  noTransactions: boolean = true;
+  noTransactions = true;
   isLoading = true;
   currency = '';
   constructor(private apiService: ApiService) {}
@@ -22,9 +22,12 @@ export class TransactionsComponent implements OnInit {
   }
 
   getAccountData(): void {
+    this.isLoading = false;
     this.apiService.get<any>('http://localhost:8080/transactions').subscribe(
       (res: any) => {
+        this.isLoading = false;
         this.transactionData = res.response.transactionData.results;
+
         this.transactionData = this.transactionData
           .map((el: any) => {
             return el.transaction;
@@ -35,13 +38,13 @@ export class TransactionsComponent implements OnInit {
           .map((el: any) => {
             el.amount = Math.abs(el.amount);
             return el;
-            // return el.formattedDescription;
           });
 
         this.noTransactions = this.checkIfTheAreTransactions(
           this.transactionData
         );
-        // workaround sometimes API receive empty transaction data
+
+        // workaround sometimes API sends data on second call
         if (this.noTransactions) {
           window.location.reload();
         }
@@ -71,30 +74,28 @@ export class TransactionsComponent implements OnInit {
             return prev + cur.amount;
           }, 0);
 
-        this.topThree = this.transactionData.slice(0, 3).map((el: any) => {
-          const { date, amount, formattedDescription: merchant } = el;
+        this.topThree = this.transactionData
+          .map((el: any) => {
+            const { date, amount, formattedDescription: merchant } = el;
 
-          return {
-            date: new Date(date).toLocaleString(),
-            amount,
-            merchant,
-          };
-        });
+            return {
+              date: new Date(date).toLocaleString(),
+              amount,
+              merchant,
+            };
+          })
+          .sort((a: any, b: any) => {
+            return b.amount - a.amount;
+          })
+          .slice(0, 3);
 
         this.currency = this.transactionData[0].currencyDenominatedAmount.currencyCode;
 
-        console.log(this.transactionData);
-        // this.isNoData
-        console.log(this.mostOccurenceMerchant);
-        console.log(this.maxSum);
-        console.log(this.topThree);
-
         this.calculateExpenses(this.transactionData);
-        this.isLoading = false;
       },
       (error: any) => {
-        console.log(error);
         this.isLoading = false;
+        console.log(error);
       }
     );
   }
