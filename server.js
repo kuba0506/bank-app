@@ -51,7 +51,6 @@ app.get("/transactions", async function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
-    // const response = await getTransactionData(token);
     try {
         if (!tokenGlobal) throw "Token undefined!";
         const response = await getData(tokenGlobal);
@@ -88,9 +87,6 @@ async function getData(accessToken) {
         getAccountData(accessToken),
         getTransactionData(accessToken),
     ]);
-
-    console.log("transactions: ", transactionData);
-    console.log("accountData: ", accountData);
 
     return {
         accountData,
@@ -137,6 +133,9 @@ async function getAccessToken(code) {
 }
 
 // https://docs.tink.com/api#search-query-transactions
+
+// startData: 1577836800000
+// endDate: 1609459199000
 async function getTransactionData(token) {
     const response = await fetch(base + "/search", {
         method: "POST",
@@ -144,23 +143,21 @@ async function getTransactionData(token) {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ limit: 5 }),
-    });
-    console.log('trans: ', response);
-
-    return response;
-    // return handleResponse(response);
-}
-
-async function getUserData(token) {
-    const response = await fetch(base + "/user", {
-        headers: {
-            Authorization: "Bearer " + token,
-        },
+        body: JSON.stringify({ limit: 15, endDate: 1609459199000, startDate: 1577836800000, order: "ASC" }),
     });
 
     return handleResponse(response);
 }
+
+// async function getUserData(token) {
+//     const response = await fetch(base + "/user", {
+//         headers: {
+//             Authorization: "Bearer " + token,
+//         },
+//     });
+
+//     return handleResponse(response);
+// }
 
 async function getAccountData(token) {
     const response = await fetch(base + "/accounts/list", {
@@ -173,26 +170,26 @@ async function getAccountData(token) {
     return handleResponse(response);
 }
 
-async function getInvestmentData(token) {
-    const response = await fetch(base + "/investments", {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-        },
-    });
+// async function getInvestmentData(token) {
+//     const response = await fetch(base + "/investments", {
+//         headers: {
+//             "Content-Type": "application/json",
+//             Authorization: "Bearer " + token,
+//         },
+//     });
 
-    return handleResponse(response);
-}
+//     return handleResponse(response);
+// }
 
-async function getCategoryData(token) {
-    const response = await fetch(base + "/categories", {
-        headers: {
-            Authorization: "Bearer " + token,
-        },
-    });
+// async function getCategoryData(token) {
+//     const response = await fetch(base + "/categories", {
+//         headers: {
+//             Authorization: "Bearer " + token,
+//         },
+//     });
 
-    return handleResponse(response);
-}
+//     return handleResponse(response);
+// }
 
 // Start the server.
 const port = 8080;
