@@ -15,12 +15,4 @@ export class ApiService {
       console.error(err);
     }
   }
-
-  post<T>(url: string, body: any): Observable<any> {
-    try {
-      return this.http.post<T>(`${url}`, body);
-    } catch (err) {
-      console.error(err);
-    }
-  }
 }

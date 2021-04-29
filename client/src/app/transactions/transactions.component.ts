@@ -8,13 +8,14 @@ import { TransactionsService } from './transactions.service';
   styleUrls: ['./transactions.component.less'],
 })
 export class TransactionsComponent implements OnInit {
-  transactionData: Array<any>;
-  merchant: string;
-  maxSum = 0;
-  topThreePurchases: Array<any> = [];
-  noTransactions = true;
-  isLoading = true;
+  transactionData: Array<any> = [];
+  merchantName = '';
+  total = 0;
+  topPurchases: Array<any> = [];
+  isTransactionsData = false;
+  isLoading = false;
   currency = '';
+  retryCount = 2;
 
   constructor(
     private apiService: ApiService,
@@ -22,54 +23,57 @@ export class TransactionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.merchant = this.transactionsService.merchant;
+    this.merchantName = this.transactionsService.merchant;
     this.getAccountData();
   }
 
   getAccountData(): void {
-    this.isLoading = false;
+    this.isLoading = true;
 
-    this.apiService.get<any>(this.transactionsService.transactionsUrl).subscribe(
-      (res: any) => {
-        this.isLoading = false;
-        this.transactionData = res.response.transactionData.results;
+    this.apiService
+      .get<any>(this.transactionsService.transactionsUrl)
+      .subscribe(
+        (res: any) => {
+          this.isLoading = false;
+          this.transactionData = res.response.transactionData.results;
 
-        this.transactionData = this.transactionsService.filterTransaction(
-          this.transactionData
-        );
+          this.transactionData = this.transactionsService.filterTransactionData(
+            this.transactionData
+          );
 
-        this.noTransactions = this.transactionsService.checkIfTheAreTransactions(
-          this.transactionData
-        );
+          this.isTransactionsData = this.transactionsService.checkIfThereAreTransactions(
+            res.response.transactionData.count
+          );
 
-        // workaround sometimes API sends data on second call
-        if (this.noTransactions) {
-          window.location.reload();
+          // workaround sometimes API sends data on second call
+          if (!this.isTransactionsData && this.retryCount) {
+            this.retryCount--;
+            this.getAccountData();
+          }
+
+          this.merchantName = this.transactionsService.findFavouriteMerchant(
+            this.transactionData.map((el: any) => {
+              return el.formattedDescription;
+            })
+          );
+
+          this.total = this.transactionsService.calculateTotal(
+            this.transactionData
+          );
+
+          this.topPurchases = this.transactionsService.topPurchases(
+            this.transactionData,
+            3
+          );
+
+          this.currency = this.transactionsService.getTransactionCurrency(
+            this.transactionData
+          );
+        },
+        (error: any) => {
+          this.isLoading = false;
+          console.log(error);
         }
-
-        this.merchant = this.transactionsService.mostOccurentMerchant(
-          this.transactionData.map((el: any) => {
-            return el.formattedDescription;
-          })
-        );
-
-        this.maxSum = this.transactionsService.calculateMaxSum(
-          this.transactionData
-        );
-
-        this.topThreePurchases = this.transactionsService.topPurchases(
-          this.transactionData,
-          3
-        );
-
-        this.currency = this.transactionsService.getTransactionCurrency(
-          this.transactionData
-        );
-      },
-      (error: any) => {
-        this.isLoading = false;
-        console.log(error);
-      }
-    );
+      );
   }
 }

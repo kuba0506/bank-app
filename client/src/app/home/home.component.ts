@@ -7,10 +7,8 @@ import { IOption } from '../shared/dropdown/dropdown.component';
   styleUrls: ['./home.component.less'],
 })
 export class HomeComponent implements OnInit {
-  selectedOptions: Set<IOption> = new Set();
   market: string;
   locale: string;
-  constructor() {}
 
   onSelect(option: IOption): void {
     this[option.name] = option.value;

@@ -14,7 +14,9 @@ TINK_CLIENT_SECRET="<your_client-secret>"
           </ol>
     // demo bank url
     //https://console.tink.com/demobank
-    // gb  - u64447502, mcz125
+    // test account
+    // market - GB, locale - en_US Transactions-current account only u64447502 mcz125
+
 
 
 

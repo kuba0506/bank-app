@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const base = "https://api.tink.se/api/v1";
 
 if (!TINK_APP_CLIENT_ID) {
-    console.log("\x1b[33m%s\x1b[0m", "Warning: REACT_APP_CLIENT_ID environment variable not set");
+    console.log("\x1b[33m%s\x1b[0m", "Warning: TINK_APP_CLIENT_ID environment variable not set");
     process.exit(1);
 }
 
@@ -42,7 +42,7 @@ app.get("/transactions", async function (req, res) {
     res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
     try {
-        if (!token) throw "Token undefined!";
+        if (!token) throw "Token not found!";
         const response = await getData(token);
         return res.json({
             response,

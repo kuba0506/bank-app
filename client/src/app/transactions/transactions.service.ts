@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 interface ITransactionsService {
   merchant: string;
   readonly transactionsUrl: string;
-  filterTransaction(transactions: Array<any>): Array<any>;
-  checkIfTheAreTransactions(data: Array<any>): boolean;
-  mostOccurentMerchant(arr: Array<any>): string;
+  filterTransactionData(transactions: Array<any>): Array<any>;
+  checkIfThereAreTransactions(count: number): boolean;
+  findFavouriteMerchant(arr: Array<any>): string;
   topPurchases(transactions: Array<any>, count: number): Array<any>;
   getTransactionCurrency(transactions: Array<any>): string;
 }
@@ -31,7 +31,7 @@ export class TransactionsService implements ITransactionsService {
     return this._transactionsUrl;
   }
 
-  filterTransaction(transactions: Array<any>): Array<any> {
+  filterTransactionData(transactions: Array<any>): Array<any> {
     return transactions
       .map((el: any) => {
         return el.transaction;
@@ -41,24 +41,16 @@ export class TransactionsService implements ITransactionsService {
       })
       .map((el: any) => {
         el.amount = Math.abs(el.amount);
+
         return el;
       });
   }
 
-  checkIfTheAreTransactions(data: Array<any>): boolean {
-    return data.length === 0 ? true : false;
+  checkIfThereAreTransactions(count: number): boolean {
+    return !!count;
   }
 
-  calculateMode(arr): string {
-    return arr
-      .sort(
-        (a, b) =>
-          arr.filter((v) => v === a).length - arr.filter((v) => v === b).length
-      )
-      .pop();
-  }
-
-  mostOccurentMerchant(arr: Array<any>): string {
+  findFavouriteMerchant(arr: Array<any>): string {
     this._merchant = arr
       .sort(
         (a, b) =>
@@ -69,7 +61,7 @@ export class TransactionsService implements ITransactionsService {
     return this.merchant;
   }
 
-  calculateMaxSum(transactions: Array<any>): number {
+  calculateTotal(transactions: Array<any>): number {
     return transactions
       .filter((el: any) => {
         return el.formattedDescription === this.merchant;
@@ -97,6 +89,6 @@ export class TransactionsService implements ITransactionsService {
   }
 
   getTransactionCurrency(transactions: Array<any>): string {
-    return transactions[0].currencyDenominatedAmount.currencyCode;
+    return transactions[0]?.currencyDenominatedAmount.currencyCode;
   }
 }
