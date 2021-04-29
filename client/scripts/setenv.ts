@@ -6,7 +6,7 @@ require('dotenv').config();
 const environment = argv.environment;
 const isProduction = environment === 'prod';
 
-if (!process.env.TINK_APP_CLIENT_ID || !process.env.TINK_CLIENT_SECRET) {
+if (!process.env.TINK_APP_CLIENT_ID) {
    console.error('All the required environment variables were not provided!');
    process.exit(-1);
 }
@@ -21,7 +21,6 @@ const environmentFileContent = `
 export const environment = {
    production: ${isProduction},
    TINK_APP_CLIENT_ID: "${process.env.TINK_APP_CLIENT_ID}",
-   TINK_CLIENT_SECRET: "${process.env.TINK_CLIENT_SECRET}"
 };
 `;
 // write the content to the respective file

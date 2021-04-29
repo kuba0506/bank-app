@@ -3,10 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
 const fetch = require("node-fetch");
-const secrets = require("./env.js");
 
-const TINK_APP_CLIENT_ID = secrets.env.TINK_APP_CLIENT_ID;
-const TINK_CLIENT_SECRET = secrets.env.TINK_CLIENT_SECRET;
+const TINK_APP_CLIENT_ID = process.env.TINK_APP_CLIENT_ID;
+const TINK_CLIENT_SECRET = process.env.TINK_CLIENT_SECRET;
 
 // todo
 app.use(express.static(path.join(__dirname, "client/build")));
