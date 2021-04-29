@@ -76,6 +76,7 @@ export class AuthButtonComponent implements OnInit, OnChanges {
     // demo bank url
     //https://console.tink.com/demobank
     // gb  - u64447502, mcz125
+    // se - u27678322, vrh343
     // code=dd36e3ed87f54a9699e03ec9f5209c29&credentialsId=095739aa882d411faef3aa7b526e1b3f
 
     return `${baseURL}?client_id=${client_id}&redirect_uri=${redirect_uri}&market=${market}&locale=${locale}&test=${test}`;

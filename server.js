@@ -22,19 +22,34 @@ const base = "https://api.tink.se/api/v1";
 const transactionURl = 'https://api.tink.com/data/v2/transactions';
 
 
+if (!TINK_APP_CLIENT_ID) {
+  // todo exit process
+    console.log("\x1b[33m%s\x1b[0m", "Warning: REACT_APP_CLIENT_ID environment variable not set");
+    process.exit(1);
+}
+
+if (!TINK_CLIENT_SECRET) {
+    console.log("\x1b[33m%s\x1b[0m", "Warning: TINK_CLIENT_SECRET environment variable not set");
+    process.exit(1);
+}
+
 // This is the server API, where the client can post a received OAuth code.
 app.get("/callback", function (req, res) {
   console.log("!!!code: ", req.query);
   // console.log("!!!code: ", req.body);
     getAccessToken(req.query.code)
     // getAccessToken(req.body.code)
-        .then((response) => getData(response.access_token))
         .then((response) => {
-            res.json({
-                response,
-            });
-            // res.redirect("/to");
-        })
+          res.redirect(`/transactions?token=${response.access_token}`);
+        }
+        // .then((response) => getData(response.access_token))
+        // .then((response) => {
+        //     res.json({
+        //         response,
+        //     });
+        //     // res.redirect("/transactions?token=123");
+        // })
+        )
         .catch((err) => {
             console.log(err);
             res.status(500).json({ message: err.toString() });
@@ -50,22 +65,22 @@ async function handleResponse(response) {
 }
 
 async function getData(accessToken) {
-    const [transactionData] = await Promise.all([
-        getTransactionData(accessToken),
-    ]);
-
-    return {
-        transactionData,
-    };
-    // const [accountData, transactionData] = await Promise.all([
-    //     getAccountData(accessToken),
+    // const [transactionData] = await Promise.all([
     //     getTransactionData(accessToken),
     // ]);
 
     // return {
-    //     accountData,
     //     transactionData,
     // };
+    const [accountData, transactionData] = await Promise.all([
+        getAccountData(accessToken),
+        getTransactionData(accessToken),
+    ]);
+
+    return {
+        accountData,
+        transactionData,
+    };
 }
 // async function getData(accessToken) {
 //     const [categoryData, userData, accountData, investmentData, transactionData] = await Promise.all([
@@ -174,13 +189,7 @@ async function getCategoryData(token) {
     return handleResponse(response);
 }
 
-if (!TINK_APP_CLIENT_ID) {
-    console.log("\x1b[33m%s\x1b[0m", "Warning: REACT_APP_CLIENT_ID environment variable not set");
-}
 
-if (!TINK_CLIENT_SECRET) {
-    console.log("\x1b[33m%s\x1b[0m", "Warning: TINK_CLIENT_SECRET environment variable not set");
-}
 
 // Start the server.
 const port = 8080;
