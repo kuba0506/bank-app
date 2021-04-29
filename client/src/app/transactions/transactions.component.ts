@@ -13,6 +13,8 @@ export class TransactionsComponent implements OnInit {
   mostOccurenceMerchant: any;
   maxSum: any;
   topThree: any;
+  noTransactions: boolean = true;
+  isLoading = true;
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -20,9 +22,8 @@ export class TransactionsComponent implements OnInit {
   }
 
   getAccountData(): void {
-    this.apiService
-      .get<any>('http://localhost:8080/transactions')
-      .subscribe((res: any) => {
+    this.apiService.get<any>('http://localhost:8080/transactions').subscribe(
+      (res: any) => {
         this.accountData = res.response.accountData;
         this.transactionData = res.response.transactionData.results;
         this.transactionData = this.transactionData
@@ -37,6 +38,10 @@ export class TransactionsComponent implements OnInit {
             return el;
             // return el.formattedDescription;
           });
+
+        this.noTransactions = this.checkIfTheAreTransactions(
+          this.transactionData
+        );
 
         function mode(arr) {
           return arr
@@ -59,6 +64,7 @@ export class TransactionsComponent implements OnInit {
             return el.formattedDescription === this.mostOccurenceMerchant;
           })
           .reduce((prev, cur) => {
+            console.log(prev);
             return prev + cur.amount;
           }, 0);
 
@@ -74,12 +80,19 @@ export class TransactionsComponent implements OnInit {
 
         console.log(this.accountData);
         console.log(this.transactionData);
+        // this.isNoData
         console.log(this.mostOccurenceMerchant);
         console.log(this.maxSum);
         console.log(this.topThree);
 
         this.calculateExpenses(this.transactionData);
-      });
+        this.isLoading = false;
+      },
+      (error: any) => {
+        console.log(error);
+        this.isLoading = false;
+      }
+    );
   }
 
   calculateExpenses(transcations: any): void {
@@ -87,5 +100,9 @@ export class TransactionsComponent implements OnInit {
     // formattedDescription
     // categoryType
     // const filteredTransactions
+  }
+
+  checkIfTheAreTransactions(data: Array<any>): boolean {
+    return data.length === 0 ? true : false;
   }
 }
