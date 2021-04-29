@@ -8,13 +8,13 @@ import { ApiService } from '../services/api.service';
 })
 export class TransactionsComponent implements OnInit {
   transactionData: any;
-  accountData: any;
   private categoryType = 'EXPENSES';
   mostOccurenceMerchant: any;
   maxSum: any;
   topThree: any;
   noTransactions: boolean = true;
   isLoading = true;
+  currency = '';
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
@@ -24,7 +24,6 @@ export class TransactionsComponent implements OnInit {
   getAccountData(): void {
     this.apiService.get<any>('http://localhost:8080/transactions').subscribe(
       (res: any) => {
-        this.accountData = res.response.accountData;
         this.transactionData = res.response.transactionData.results;
         this.transactionData = this.transactionData
           .map((el: any) => {
@@ -42,6 +41,10 @@ export class TransactionsComponent implements OnInit {
         this.noTransactions = this.checkIfTheAreTransactions(
           this.transactionData
         );
+        // workaround sometimes API receive empty transaction data
+        if (this.noTransactions) {
+          window.location.reload();
+        }
 
         function mode(arr) {
           return arr
@@ -78,7 +81,8 @@ export class TransactionsComponent implements OnInit {
           };
         });
 
-        console.log(this.accountData);
+        this.currency = this.transactionData[0].currencyDenominatedAmount.currencyCode;
+
         console.log(this.transactionData);
         // this.isNoData
         console.log(this.mostOccurenceMerchant);

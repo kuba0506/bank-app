@@ -13,7 +13,7 @@
   <img src='{{"//logo.clearbit.com/" + mostOccurenceMerchant}}' onError="this.src='https://dummyimage.com/128x128/000/ffffff.jpg&text=LOGO+NOT+FOUND'">
   <br>
   <br>
-  <p>During 2020 you've spent {{ maxSum }} in {{ mostOccurenceMerchant }}</p>
+  <p>During 2020 you've spent {{ maxSum.toFixed(2) }} {{currency}} in {{ mostOccurenceMerchant }}</p>
   <br />
   <p>Top 3 purchases</p>
   <table class="table table-dark table-striped">
@@ -29,7 +29,7 @@
       <tr *ngFor="let el of topThree; index as i">
         <th scope="row">{{ i + 1 }}</th>
         <td>{{ el.merchant }}</td>
-        <td>{{ el.amount }}</td>
+        <td>{{ el.amount }} {{currency}}</td>
         <td>{{ el.date }}</td>
       </tr>
     </tbody>
