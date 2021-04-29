@@ -39,7 +39,7 @@ You should be redirected to the client app on `http://localhost:3000/`. The clie
 
 ## Test account
 
-Market -GB
+Market - GB
 Locale - en_US
 Transactions-current account only -  u64447502 / mcz125
 
