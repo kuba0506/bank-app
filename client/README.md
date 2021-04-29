@@ -7,6 +7,13 @@ TINK_CLIENT_SECRET="<your_client-secret>"
 
 2 Run command  - npm start
 
+          Plans:
+          <ol>
+            <li>Improve UI look and feel</li>
+            <li>Securly store token on frontend.</li>
+          </ol>
+
+
 
 
 

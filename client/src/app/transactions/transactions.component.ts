@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-transactions',
@@ -7,13 +7,19 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./transactions.component.less'],
 })
 export class TransactionsComponent implements OnInit {
-  token: string;
-  constructor(private route: ActivatedRoute) {}
+  transactions: any;
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-        this.route.queryParams.subscribe((params) => {
-          this.token = params["token"];
-          console.log('token: ', this.token)
-        });
+    this.getAccountData();
+  }
+
+  getAccountData(): void {
+    this.apiService
+      .get<any>('http://localhost:8080/transactions')
+      .subscribe((res: any) => {
+        console.log(res);
+        this.transactions = res;
+      });
   }
 }

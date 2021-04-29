@@ -12,6 +12,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthButtonComponent } from './auth-button/auth-button.component';
 import { CallbackComponent } from './callback/callback.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -23,14 +24,10 @@ import { TransactionsComponent } from './transactions/transactions.component';
     NotFoundComponent,
     AuthButtonComponent,
     CallbackComponent,
-    TransactionsComponent
+    TransactionsComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-  ],
+  imports: [BrowserModule, HttpClientModule, AppRoutingModule, NgbModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
