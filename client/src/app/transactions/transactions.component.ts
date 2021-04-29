@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../services/api.service';
+import { TransactionsService } from './transactions.service';
 
 @Component({
   selector: 'app-transactions',
@@ -7,40 +8,37 @@ import { ApiService } from '../services/api.service';
   styleUrls: ['./transactions.component.less'],
 })
 export class TransactionsComponent implements OnInit {
-  transactionData: any;
-  private categoryType = 'EXPENSES';
-  mostOccurenceMerchant: any;
-  maxSum: any;
-  topThree: any;
+  transactionData: Array<any>;
+  merchant: string;
+  maxSum = 0;
+  topThreePurchases: Array<any> = [];
   noTransactions = true;
   isLoading = true;
   currency = '';
-  constructor(private apiService: ApiService) {}
+
+  constructor(
+    private apiService: ApiService,
+    private transactionsService: TransactionsService
+  ) {}
 
   ngOnInit(): void {
+    this.merchant = this.transactionsService.merchant;
     this.getAccountData();
   }
 
   getAccountData(): void {
     this.isLoading = false;
-    this.apiService.get<any>('http://localhost:8080/transactions').subscribe(
+
+    this.apiService.get<any>(this.transactionsService.transactionsUrl).subscribe(
       (res: any) => {
         this.isLoading = false;
         this.transactionData = res.response.transactionData.results;
 
-        this.transactionData = this.transactionData
-          .map((el: any) => {
-            return el.transaction;
-          })
-          .filter((el: any) => {
-            return el.categoryType === this.categoryType;
-          })
-          .map((el: any) => {
-            el.amount = Math.abs(el.amount);
-            return el;
-          });
+        this.transactionData = this.transactionsService.filterTransaction(
+          this.transactionData
+        );
 
-        this.noTransactions = this.checkIfTheAreTransactions(
+        this.noTransactions = this.transactionsService.checkIfTheAreTransactions(
           this.transactionData
         );
 
@@ -49,65 +47,29 @@ export class TransactionsComponent implements OnInit {
           window.location.reload();
         }
 
-        function mode(arr) {
-          return arr
-            .sort(
-              (a, b) =>
-                arr.filter((v) => v === a).length -
-                arr.filter((v) => v === b).length
-            )
-            .pop();
-        }
-
-        this.mostOccurenceMerchant = mode(
+        this.merchant = this.transactionsService.mostOccurentMerchant(
           this.transactionData.map((el: any) => {
             return el.formattedDescription;
           })
         );
 
-        this.maxSum = this.transactionData
-          .filter((el: any) => {
-            return el.formattedDescription === this.mostOccurenceMerchant;
-          })
-          .reduce((prev, cur) => {
-            console.log(prev);
-            return prev + cur.amount;
-          }, 0);
+        this.maxSum = this.transactionsService.calculateMaxSum(
+          this.transactionData
+        );
 
-        this.topThree = this.transactionData
-          .map((el: any) => {
-            const { date, amount, formattedDescription: merchant } = el;
+        this.topThreePurchases = this.transactionsService.topPurchases(
+          this.transactionData,
+          3
+        );
 
-            return {
-              date: new Date(date).toLocaleString(),
-              amount,
-              merchant,
-            };
-          })
-          .sort((a: any, b: any) => {
-            return b.amount - a.amount;
-          })
-          .slice(0, 3);
-
-        this.currency = this.transactionData[0].currencyDenominatedAmount.currencyCode;
-
-        this.calculateExpenses(this.transactionData);
+        this.currency = this.transactionsService.getTransactionCurrency(
+          this.transactionData
+        );
       },
       (error: any) => {
         this.isLoading = false;
         console.log(error);
       }
     );
-  }
-
-  calculateExpenses(transcations: any): void {
-    // amount
-    // formattedDescription
-    // categoryType
-    // const filteredTransactions
-  }
-
-  checkIfTheAreTransactions(data: Array<any>): boolean {
-    return data.length === 0 ? true : false;
   }
 }

@@ -12,6 +12,9 @@ TINK_CLIENT_SECRET="<your_client-secret>"
             <li>Improve UI look and feel</li>
             <li>Securly store token on frontend.</li>
           </ol>
+    // demo bank url
+    //https://console.tink.com/demobank
+    // gb  - u64447502, mcz125
 
 
 
