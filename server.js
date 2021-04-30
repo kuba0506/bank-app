@@ -3,12 +3,14 @@ const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
 const fetch = require("node-fetch");
+const cors = require('cors');
 
 const TINK_APP_CLIENT_ID = process.env.TINK_APP_CLIENT_ID;
 const TINK_CLIENT_SECRET = process.env.TINK_CLIENT_SECRET;
 let token;
 
 app.use(express.static(path.join(__dirname, "client/build")));
+app.use(cors()) // will enable cors
 app.use(bodyParser.json());
 
 const base = "https://api.tink.se/api/v1";
@@ -31,24 +33,26 @@ app.get("/callback", function (req, res) {
 
             res.redirect(`/transactions`);
         })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).json({ message: err.toString() });
+        .catch((error) => {
+            console.error("ERROR: ", JSON.stringify(error, null, 4));
+            res.status(500).json({ message: error.toString() });
         });
 });
 
 app.get("/transactions", async function (req, res) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Content-Length, X-Requested-With");
     try {
-        if (!token) throw "Token not found!";
+        if (!token) {
+            console.error("Token not found!");
+        }
+
         const response = await getData(token);
+
         return res.json({
             response,
         });
     } catch (error) {
-        console.error(error);
+        console.error("ERROR: ", JSON.stringify(error, null, 4));
+        return res.redirect("http://localhost:3000/");
     }
 });
 

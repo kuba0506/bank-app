@@ -1,11 +1,11 @@
 <div *ngIf="isLoading">
   <h2>Loading...</h2>
 </div>
-<div *ngIf="!areThereTransactionsData">
+<div *ngIf="!areThereTransactionsData && !isLoading">
   <h2>Sorry, no transactions found, please again later!</h2>
 </div>
 
-<div *ngIf="areThereTransactionsData">
+<div *ngIf="areThereTransactionsData && !isLoading">
   <h2>Your transactions</h2>
   <p>
     Your favorite merchant: <strong>{{ merchantName }}</strong>

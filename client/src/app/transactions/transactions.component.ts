@@ -14,7 +14,7 @@ export class TransactionsComponent implements OnInit {
   areThereTransactionsData = false;
   isLoading = false;
   currency = '';
-  retryCount = 3;
+  retryCount = 5;
 
   constructor(
     private apiService: ApiService,
@@ -33,7 +33,6 @@ export class TransactionsComponent implements OnInit {
       .get<any>(this.transactionsService.transactionsUrl)
       .subscribe(
         (res: any) => {
-          this.isLoading = false;
           this.transactionData = res.response.transactionData.results;
 
           this.transactionData = this.transactionsService.transformTransactionData(
@@ -70,8 +69,10 @@ export class TransactionsComponent implements OnInit {
           );
         },
         (error: any) => {
+          console.log(JSON.stringify(error, null, 4));
+        },
+        () => {
           this.isLoading = false;
-          console.log(error);
         }
       );
   }
