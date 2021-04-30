@@ -33,7 +33,7 @@ export class AuthButtonComponent implements OnInit, OnChanges {
   }
 
   get isLinkDisabled(): boolean {
-    return !this.market || !this.locale ? true : false;
+    return !this.market || !this.locale;
   }
 
   connect(): void {

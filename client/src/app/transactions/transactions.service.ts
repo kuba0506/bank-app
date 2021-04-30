@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 interface ITransactionsService {
   merchant: string;
   readonly transactionsUrl: string;
-  filterTransactionData(transactions: Array<any>): Array<any>;
+  transformTransactionData(transactions: Array<any>): Array<any>;
   checkIfThereAreTransactions(count: number): boolean;
   findFavouriteMerchant(arr: Array<any>): string;
   topPurchases(transactions: Array<any>, count: number): Array<any>;
@@ -17,7 +17,6 @@ export class TransactionsService implements ITransactionsService {
   private categoryType = 'EXPENSES';
   private _transactionsUrl = 'http://localhost:8080/transactions';
   private _merchant = '';
-  constructor() {}
 
   get merchant(): string {
     return this._merchant;
@@ -31,7 +30,7 @@ export class TransactionsService implements ITransactionsService {
     return this._transactionsUrl;
   }
 
-  filterTransactionData(transactions: Array<any>): Array<any> {
+  transformTransactionData(transactions: Array<any>): Array<any> {
     return transactions
       .map((el: any) => {
         return el.transaction;
@@ -68,7 +67,8 @@ export class TransactionsService implements ITransactionsService {
       })
       .reduce((prev, cur) => {
         return prev + cur.amount;
-      }, 0);
+      }, 0)
+      .toFixed(2);
   }
 
   topPurchases(transactions: Array<any>, count: number): Array<any> {

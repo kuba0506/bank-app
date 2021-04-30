@@ -5,17 +5,16 @@ import { TransactionsService } from './transactions.service';
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
-  styleUrls: ['./transactions.component.less'],
 })
 export class TransactionsComponent implements OnInit {
   transactionData: Array<any> = [];
   merchantName = '';
   total = 0;
   topPurchases: Array<any> = [];
-  isTransactionsData = false;
+  areThereTransactionsData = false;
   isLoading = false;
   currency = '';
-  retryCount = 2;
+  retryCount = 3;
 
   constructor(
     private apiService: ApiService,
@@ -37,16 +36,16 @@ export class TransactionsComponent implements OnInit {
           this.isLoading = false;
           this.transactionData = res.response.transactionData.results;
 
-          this.transactionData = this.transactionsService.filterTransactionData(
+          this.transactionData = this.transactionsService.transformTransactionData(
             this.transactionData
           );
 
-          this.isTransactionsData = this.transactionsService.checkIfThereAreTransactions(
+          this.areThereTransactionsData = this.transactionsService.checkIfThereAreTransactions(
             res.response.transactionData.count
           );
 
-          // workaround sometimes API sends data on second call
-          if (!this.isTransactionsData && this.retryCount) {
+          // workaround sometimes API sends empty data
+          if (!this.areThereTransactionsData && this.retryCount) {
             this.retryCount--;
             this.getAccountData();
           }

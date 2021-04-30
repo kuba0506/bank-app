@@ -9,7 +9,6 @@ export interface IOption {
 @Component({
   selector: 'app-dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.less'],
 })
 export class DropdownComponent implements OnInit {
   @Input() label: string;
