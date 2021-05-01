@@ -100,7 +100,7 @@ async function getTransactionData(token) {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token,
         },
-        body: JSON.stringify({ limit: 15, endDate: 1609459199000, startDate: 1577836800000, order: "ASC" }),
+        body: JSON.stringify({ limit: 50, endDate: 1609459199000, startDate: 1577836800000, order: "ASC" }),
     });
 
     return handleResponse(response);

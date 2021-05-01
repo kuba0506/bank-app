@@ -69,6 +69,7 @@ export class TransactionsComponent implements OnInit {
           );
         },
         (error: any) => {
+          this.isLoading = false;
           console.log(JSON.stringify(error, null, 4));
         },
         () => {
